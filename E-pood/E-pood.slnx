@@ -1,6 +1,0 @@
-<Solution>
-  <Project Path="../E-pood.ApplicationServices/E-pood.ApplicationServices.csproj" Id="3fbfb265-461d-4cd3-9ae7-cb144d4dd9ee" />
-  <Project Path="../E-pood.Core/E-pood.Core.csproj" Id="287a7cd8-fcd7-41c9-a110-1fc5f0d8acfd" />
-  <Project Path="../E-pood.Data/E-pood.Data.csproj" />
-  <Project Path="E-pood.csproj" />
-</Solution>
