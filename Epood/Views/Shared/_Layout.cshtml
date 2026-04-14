@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Epood.Models.ApplicationUser> signInManager;
+
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -25,6 +29,12 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                        
+                    </ul>
+                    <ul>
+                        <li class="nav-item" style="width:auto; padding:0.8rem;">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="Register">Sign Up</a>
                         </li>
                     </ul>
                 </div>
