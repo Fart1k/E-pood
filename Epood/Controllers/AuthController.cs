@@ -63,5 +63,43 @@ namespace Epood.Controllers
             Console.WriteLine(vm.Email, vm.Password);
             return View(vm);
         }
+
+        //Login
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(vm);
+            }
+
+            var result = await _signInManager.PasswordSignInAsync(
+                vm.Email,
+                vm.Password,
+                vm.RememberMe,
+                lockoutOnFailure: false
+                );
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            ModelState.AddModelError("", "Invalid login attempt");
+            return View(vm);
+        }
+
+        //Logout
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
