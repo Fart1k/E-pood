@@ -94,5 +94,12 @@ namespace Epood.Controllers
             ModelState.AddModelError("", "Invalid login attempt");
             return View(vm);
         }
+
+        //Logout
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
