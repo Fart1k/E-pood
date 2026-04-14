@@ -1,3 +1,8 @@
+using Epood.Data;
+using Epood.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
 namespace Epood
 {
     public class Program
@@ -8,6 +13,13 @@ namespace Epood
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddDbContext<ShopContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")).EnableSensitiveDataLogging());
+
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ShopContext>()
+                .AddDefaultTokenProviders();
 
             var app = builder.Build();
 
