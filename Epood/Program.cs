@@ -48,7 +48,7 @@ namespace Epood
                 var email = "seinartur@gmail.com";
                 var user = await userManager.FindByEmailAsync(email);
 
-                if (user != null && !await userManager.IsInRoleAsync(user, "Admin"))
+                if (user != null)
                 {
                     await userManager.AddToRoleAsync(user, "Admin");
                 }
@@ -56,7 +56,7 @@ namespace Epood
 
             app.UseHttpsRedirection();
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapStaticAssets();

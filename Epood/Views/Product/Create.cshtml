@@ -1,0 +1,24 @@
+﻿@model Epood.ViewModels.CreateProductViewModel
+
+<h2>Add product</h2>
+
+<form asp-action="Create" method="post">
+
+    <div>
+        <label>Name</label>
+        <input asp-for="Name" />
+    </div>
+
+    <div>
+        <label>Description</label>
+        <input asp-for="Description" />
+    </div>
+
+    <div>
+        <label>Price</label>
+        <input asp-for="Price" />
+    </div>
+
+    <button type="submit">Submit</button>
+
+</form>
