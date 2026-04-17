@@ -1,0 +1,24 @@
+﻿@model List<Product>
+
+<h2>Pending Products</h2>
+
+
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Actions</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Name</td>
+            <td>@item.Price</td>
+            <td>
+                <a asp-action="Approve" asp-route-id="@item.Id">Approve</a>
+                <a asp-action="Reject" asp-route-id="@item.Id">Reject</a>
+            </td>
+        </tr>
+    }
+</table>
