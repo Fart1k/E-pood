@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
+using Microsoft.EntityFrameworkCore;
 
 namespace Epood.Controllers
 {
@@ -59,5 +60,21 @@ namespace Epood.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
+        // Details
+        [HttpGet]
+        public IActionResult Details(int id)
+        {
+            var product = _context.Products
+                .FirstOrDefault(x => x.Id == id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return View(product);
+        }
+
     }
 }
