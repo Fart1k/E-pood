@@ -38,6 +38,9 @@ namespace Epood
                 var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                 var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 
+                string adminEmail = "admin@admin.com";
+                string adminPassword = "Admin123!";
+
                 //Admini roll
                 if (!await roleManager.RoleExistsAsync("Admin"))
                 {
@@ -45,10 +48,20 @@ namespace Epood
                 }
 
                 //Teen mind adminiks
-                var email = "seinartur@gmail.com";
-                var user = await userManager.FindByEmailAsync(email);
+                var user = await userManager.FindByEmailAsync(adminEmail);
 
-                if (user != null && !await userManager.IsInRoleAsync(user, "Admin"))
+                if (user == null)
+                {
+                    user = new ApplicationUser
+                    {
+                        UserName = adminEmail,
+                        Email = adminEmail
+                    };
+
+                    await userManager.CreateAsync(user, adminPassword);
+                }
+
+                if (!await userManager.IsInRoleAsync(user, "Admin"))
                 {
                     await userManager.AddToRoleAsync(user, "Admin");
                 }
@@ -56,7 +69,7 @@ namespace Epood
 
             app.UseHttpsRedirection();
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapStaticAssets();
