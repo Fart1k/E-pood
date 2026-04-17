@@ -62,7 +62,7 @@ namespace Epood.Controllers
         }
 
         // Details
-        [HttpPost]
+        [HttpGet]
         public IActionResult Details(int id)
         {
             var product = _context.Products
