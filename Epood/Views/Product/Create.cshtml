@@ -15,8 +15,30 @@
     </div>
 
     <div>
+        <label>Image URL</label>
+        <input asp-for="ImageUrl" />
+    </div>
+
+    <div>
         <label>Price</label>
-        <input asp-for="Price" />
+        <input asp-for="Price" type="number"/>
+    </div>
+
+    <div>
+        <label>
+            <input asp-for="IsAuction"/>
+            Put on auction
+        </label>
+    </div>
+
+    <div>
+        <label>Minimum price (auction)</label>
+        <input asp-for="MinPrice" type="number" />
+    </div>
+
+    <div>
+        <label>Auction end time</label>
+        <input asp-for="AuctionEndTime" type="datetime-local" />
     </div>
 
     <button type="submit">Submit</button>

@@ -45,7 +45,11 @@ namespace Epood.Controllers
             {
                 Name = vm.Name,
                 Description = vm.Description,
+                ImageUrl = vm.ImageUrl,
                 Price = vm.Price,
+                IsAuction = vm.IsAuction,
+                MinPrice = vm.MinPrice,
+                AuctionEndTime = vm.AuctionEndTime,
                 SellerId = user.Id,
                 Status = ProductStatus.Pending
             };
