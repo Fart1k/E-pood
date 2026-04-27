@@ -42,15 +42,28 @@
                     <ul>
                         @if (signInManager.IsSignedIn(User))
                         {
-                            <li class="nav-item" style="width:auto; padding:0.8rem;">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Index">Personal Account</a>
-                            </li>
-                            <li class="nav-item">
-                                <form method="post" asp-controller="Auth" asp-action="Logout">
-                                    <button type="submit" class="nav-link btn btn-link" style="width:auto; padding:0.8rem;">
-                                        Logi välja
-                                    </button>
-                                </form>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle">Personal Account</a>
+
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Account" asp-action="Index">Profile</a>
+                                    </li>
+
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Account" asp-action="Setting">Settings</a>
+                                    </li>
+
+                                    <li><hr class="dropdown-divider"/></li>
+
+                                    <li>
+                                        <form method="post" asp-controller="Auth" asp-action="Logout">
+                                            <button class="dropdown-item" type="submit">
+                                                Logout
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
                             </li>
                         }
                         else
