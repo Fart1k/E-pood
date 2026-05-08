@@ -31,5 +31,34 @@ namespace Epood.Controllers
             return View(cartItems);
         }
         
+        [HttpPost]
+        public async Task<IActionResult> AddToCart(int productId)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            var existingItem = _shopContext.CartItems
+                .FirstOrDefault(x => x.ProductId == productId && x.UserId == user.Id);
+
+            if (existingItem != null)
+            {
+                existingItem.Quantity++;
+            }
+            else
+            {
+                var cartItem = new CartItem
+                {
+                    ProductId = productId,
+                    UserId = user.Id,
+                    Quantity = 1
+                };
+
+                _shopContext.CartItems.Add(cartItem);
+            }
+
+            await _shopContext.SaveChangesAsync();
+
+            return RedirectToAction("Index");
+
+        }
     }
 }
