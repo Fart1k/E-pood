@@ -31,6 +31,10 @@
 
         <br />
 
-        <button class="btn btn-success">Add to cart</button>
+        <form asp-controller="Cart" asp-action="AddToCart" method="post">
+            <input type="hidden" name="productId" value="@Model.Id" />
+            <button type="submit" class="btn btn-success">Add to cart</button>
+        </form>
+
     </div>
 </div>

@@ -1,0 +1,27 @@
+﻿@model List<Epood.Models.CartItem>
+
+<h2>My cart</h2>
+
+@if (!Model.Any())
+{
+    <p>Your cart is empty</p>
+}
+else
+{
+    <table class="table">
+        <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Product.Name</td>
+                <td>@item.Product.Price</td>
+                <td>@item.Quantity</td>
+            </tr>
+        }
+    </table>
+}
