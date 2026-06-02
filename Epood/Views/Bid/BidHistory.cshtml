@@ -1,0 +1,30 @@
+﻿@model Epood.ViewModels.BidHistoryPageViewModel
+
+<h2>Bid History - @Model.ProductName</h2>
+
+@if (!Model.Bids.Any())
+{
+    <p>No bids yet</p>
+}
+
+else
+{
+    <table class="table">
+
+        <tr>
+            <th>User</th>
+            <th>Amount</th>
+            <th>Time</th>
+        </tr>
+
+        @foreach (var bid in Model.Bids)
+        {
+            <tr>
+                <td>@bid.UserName</td>
+                <td>@bid.Amount €</td>
+                <td>@bid.CreatedAt</td>
+            </tr>
+        }
+
+    </table>
+}

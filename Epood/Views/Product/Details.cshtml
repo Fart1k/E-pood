@@ -58,6 +58,11 @@
 
                 <button type="submit" class="btn btn-warning mt-2">Place Bid</button>
             </form>
+
+            @if (Model.SellerId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
+            {
+                <a class="btn btn-info" asp-controller="Bid" asp-action="BidHistory" asp-route-productId="@Model.Id">Bid History</a>
+            }
         }
         else
         {
