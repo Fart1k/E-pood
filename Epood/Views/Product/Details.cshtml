@@ -1,6 +1,20 @@
-﻿@model Epood.Models.Product
+﻿@model Epood.ViewModels.ProductDetailsViewModel
 
 <h2>@Model.Name</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
 
 <div class="row">
     <div class="col-md-6">
@@ -20,21 +34,47 @@
 
         @if (Model.IsAuction)
         {
-            <p><strong>Auction</strong></p>
-            <p>Starting price: @Model.MinPrice €</p>
-            <p>Ends: @Model.AuctionEndTime</p>
+            <h4>Auction</h4>
+
+            <p>
+                <strong>Starting price:</strong>
+                @Model.MinPrice €
+            </p>
+
+            <p>
+                <strong>Current highest bid:</strong>
+                @Model.CurrentPrice €
+            </p>
+
+            <p>
+                <strong>Auction End Time:</strong>
+                @Model.AuctionEndTime
+            </p>
+
+            <form asp-controller="Bid" asp-action="PlaceBid" method="post">
+                <input type="hidden" name="productId" value="@Model.Id"/>
+
+                <input type="number" name="amount" step="0.01" class="form-control" />
+
+                <button type="submit" class="btn btn-warning mt-2">Place Bid</button>
+            </form>
         }
         else
         {
-            <p><strong>Price:</strong> @Model.Price €</p>
+            <p>
+                <strong>Price:</strong> 
+                @Model.Price €
+            </p>
+
+            <br />
+
+            <form asp-controller="Cart" asp-action="AddToCart" method="post">
+                <input type="hidden" name="productId" value="@Model.Id" />
+                <button type="submit" class="btn btn-success">Add to cart</button>
+            </form>
         }
 
-        <br />
-
-        <form asp-controller="Cart" asp-action="AddToCart" method="post">
-            <input type="hidden" name="productId" value="@Model.Id" />
-            <button type="submit" class="btn btn-success">Add to cart</button>
-        </form>
+        
 
     </div>
 </div>
