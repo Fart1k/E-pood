@@ -99,7 +99,7 @@ namespace Epood.Controllers
                 MinPrice = product.MinPrice,
                 AuctionEndTime = product.AuctionEndTime,
                 CurrentPrice = currentPrice,
-
+                SellerId = product.SellerId,
             };
 
             return View(vm);

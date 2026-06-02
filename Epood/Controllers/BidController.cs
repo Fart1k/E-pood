@@ -1,5 +1,6 @@
 ﻿using Epood.Data;
 using Epood.Models;
+using Epood.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -67,6 +68,43 @@ namespace Epood.Controllers
             TempData["Success"] = "Bid submitted.";
 
             return RedirectToAction("Details", "Product", new { id = productId });
+        }
+
+        [Authorize]
+        public IActionResult BidHistory(int productId)
+        {
+            var userId = _userManager.GetUserId(User);
+
+            var product = _context.Products.FirstOrDefault(x => x.Id == productId);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            if (product.SellerId != userId)
+            {
+                return Forbid();
+            }
+
+            var bids = _context.Bids
+                .Where(x => x.ProductId ==productId)
+                .OrderByDescending(x => x.CreatedAt)
+                .Select(x => new BidHistoryViewModel
+                {
+                    UserName = x.User.UserName,
+                    Amount = x.Amount,
+                    CreatedAt = x.CreatedAt
+                })
+                .ToList();
+
+            var vm = new BidHistoryPageViewModel
+            {
+                ProductName = product.Name,
+                Bids = bids
+            };
+
+            return View("BidHistory" ,vm);
         }
     }
 }

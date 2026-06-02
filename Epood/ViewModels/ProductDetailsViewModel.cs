@@ -11,5 +11,6 @@
         public decimal? MinPrice { get; set; }
         public DateTime? AuctionEndTime { get; set; }
         public decimal CurrentPrice { get; set; }
+        public string SellerId { get; set; }
     }
 }
