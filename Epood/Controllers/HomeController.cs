@@ -1,8 +1,8 @@
 using Epood.Data;
 using Epood.Models;
+using Epood.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using System.Security.Cryptography.X509Certificates;
 
 namespace Epood.Controllers
 {
@@ -18,6 +18,14 @@ namespace Epood.Controllers
         {
             var products = _context.Products
                 .Where(x => x.Status == ProductStatus.Approved)
+                .Select(p => new ProductListItemViewModel
+                {
+                    Product = p,
+                    CurrentPrice = _context.Bids
+                        .Where(b => b.ProductId == p.Id)
+                        .Select(b => (decimal?)b.Amount)
+                        .Max() ?? p.MinPrice
+                })
                 .ToList();
 
             return View(products);
