@@ -1,4 +1,4 @@
-﻿@model List<Epood.Models.Product>
+﻿@model List<Epood.ViewModels.ProductListItemViewModel>
 
 @{
     ViewData["Title"] = "Home";
@@ -20,19 +20,30 @@ else
 
 
                     <div class="card-body">
-                        <h5 class="card-title">@item.Name</h5>
+                        <h5 class="card-title">@item.Product.Name</h5>
                         <p class="card-text">
-                            @item.Description
+                            @item.Product.Description
                         </p>
 
-                        <p>
-                            <strong>Price:</strong> @item.Price €
-                        </p>
+                        @if (item.Product.IsAuction)
+                        {
+                            <p>
+                                <strong>Starting Bid: </strong>
+                                @item.CurrentPrice €
+                            </p>
+                        }
+                        else
+                        {
+                            <p>
+                                <strong>Price: </strong>
+                                @item.Product.Price €
+                            </p>
+                        }
 
                         <a class="btn btn-primary"
                                asp-controller="Product"
                                asp-action="Details"
-                               asp-route-id="@item.Id">
+                               asp-route-id="@item.Product.Id">
                             View
                         </a>
                     </div>

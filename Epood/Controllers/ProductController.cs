@@ -55,6 +55,16 @@ namespace Epood.Controllers
                 Status = ProductStatus.Pending
             };
 
+            if (vm.IsAuction && vm.MinPrice <= 0)
+            {
+                ModelState.AddModelError("", "Auction must have a starting price.");
+            }
+
+            if (!vm.IsAuction && vm.Price <= 0)
+            {
+                ModelState.AddModelError("", "Product must have a price.");
+            }
+
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
 
@@ -73,7 +83,26 @@ namespace Epood.Controllers
                 return NotFound();
             }
 
-            return View(product);
+            var currentPrice = _context.Bids
+                .Where(x => x.ProductId == id)
+                .Select(x => (decimal?)x.Amount)
+                .Max() ?? product.MinPrice ?? product.Price;
+
+            var vm = new ProductDetailsViewModel
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Description = product.Description,
+                ImageUrl = product.ImageUrl,
+                IsAuction = product.IsAuction,
+                Price = product.Price,
+                MinPrice = product.MinPrice,
+                AuctionEndTime = product.AuctionEndTime,
+                CurrentPrice = currentPrice,
+
+            };
+
+            return View(vm);
         }
 
     }
