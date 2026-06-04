@@ -10,7 +10,7 @@ namespace Epood.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Bid> Bids { get; set; }
-
+        public DbSet<AutoBidsForItem> AutoBidsForItems { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -38,6 +38,9 @@ namespace Epood.Data
                 .WithMany()
                 .HasForeignKey(x => x.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<AutoBidsForItem>()
+                .HasKey(x => x.AutoSelectorId);
         }
     }
 

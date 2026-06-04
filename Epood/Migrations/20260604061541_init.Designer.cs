@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Epood.Migrations
 {
     [DbContext(typeof(ShopContext))]
-    [Migration("20260602091555_bids")]
-    partial class bids
+    [Migration("20260604061541_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -93,6 +93,32 @@ namespace Epood.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Epood.Models.AutoBidsForItem", b =>
+                {
+                    b.Property<Guid>("AutoSelectorId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AutoBidsForItemsId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BidListIds")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("MaxAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("AutoSelectorId");
+
+                    b.ToTable("AutoBidsForItems");
+                });
+
             modelBuilder.Entity("Epood.Models.Bid", b =>
                 {
                     b.Property<int>("Id")
@@ -106,6 +132,9 @@ namespace Epood.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsAutomatic")
+                        .HasColumnType("bit");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");

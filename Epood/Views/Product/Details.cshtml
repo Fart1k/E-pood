@@ -58,6 +58,15 @@
 
                 <button type="submit" class="btn btn-warning mt-2">Place Bid</button>
             </form>
+            <br />
+
+            <form asp-controller="Bid" asp-action="EnableAutoBid" method="post">
+                <input type="hidden" name="productId" value="@Model.Id" />
+
+                <input type="number" name="maxAmount" placeholder="Max auto bid" />
+
+                <button class="btn btn-secondary">Enable auto bid</button>
+            </form>
 
             @if (Model.SellerId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
             {

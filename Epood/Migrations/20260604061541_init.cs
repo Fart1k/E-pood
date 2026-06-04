@@ -52,6 +52,21 @@ namespace Epood.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AutoBidsForItems",
+                columns: table => new
+                {
+                    AutoSelectorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AutoBidsForItemsId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BidListIds = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MaxAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AutoBidsForItems", x => x.AutoSelectorId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -193,8 +208,8 @@ namespace Epood.Migrations
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    StarterPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsAutomatic = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -203,8 +218,7 @@ namespace Epood.Migrations
                         name: "FK_Bids_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Bids_Products_ProductId",
                         column: x => x.ProductId,
@@ -319,6 +333,9 @@ namespace Epood.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "AutoBidsForItems");
 
             migrationBuilder.DropTable(
                 name: "Bids");
