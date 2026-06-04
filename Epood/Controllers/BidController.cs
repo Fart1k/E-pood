@@ -65,6 +65,8 @@ namespace Epood.Controllers
 
             await _context.SaveChangesAsync();
 
+            await CheckAutoBids(productId);
+
             TempData["Success"] = "Bid submitted.";
 
             return RedirectToAction("Details", "Product", new { id = productId });
@@ -105,6 +107,109 @@ namespace Epood.Controllers
             };
 
             return View("BidHistory" ,vm);
+        }
+
+        public async Task CheckAutoBids(int productId)
+        {
+            var autoEntry = _context.AutoBidsForItems
+                .FirstOrDefault(x => x.AutoBidsForItemsId == productId.ToString());
+
+            if (autoEntry == null)
+            {
+                return;
+            }
+
+            var highestBid = _context.Bids
+                .Where(x => x.ProductId == productId)
+                .OrderByDescending(x => x.Amount)
+                .FirstOrDefault();
+
+            if (highestBid == null)
+                return;
+
+            var autoUsers = _context.AutoBidsForItems
+                .Where(x => x.AutoBidsForItemsId == productId.ToString())
+                .Where(x => x.MaxAmount > highestBid.Amount)
+                .Where(x => !string.IsNullOrEmpty(x.UserId))
+                .OrderByDescending(x => x.MaxAmount)
+                .ToList();
+
+            var ordered = autoUsers
+                .OrderByDescending(x => x.MaxAmount)
+                .ToList();
+            if (highestBid == null)
+            {
+                return;
+            }
+
+            foreach (var auto in ordered)
+            {
+                if (auto.MaxAmount <= highestBid.Amount)
+                {
+                    continue;
+                }
+
+                if (string.IsNullOrEmpty(auto.UserId))
+                {
+                    continue;
+                }
+
+                if (auto.UserId == highestBid.UserId)
+                {
+                    continue;
+                }
+
+                var newAmount = Math.Min(auto.MaxAmount, highestBid.Amount + 1);
+
+                var autoBid = new Bid
+                {
+                    ProductId = productId,
+                    UserId = auto.UserId,
+                    Amount = newAmount,
+                    IsAutomatic = true
+                };
+
+                _context.Bids.Add(autoBid);
+
+                highestBid = autoBid;
+
+                Console.WriteLine($"Autobid triggered for user {auto.UserId}, max {auto.MaxAmount}");
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        [HttpPost]
+        public IActionResult EnableAutoBid(int productId, decimal maxAmount)
+        {
+            var userId = _userManager.GetUserId(User);
+
+            var existing = _context.AutoBidsForItems
+                .FirstOrDefault(x => x.AutoBidsForItemsId == productId.ToString() && x.UserId == userId);
+
+            if (existing != null)
+            {
+                existing.MaxAmount = maxAmount;
+            }
+
+            else
+            {
+                var entry = new AutoBidsForItem
+                {
+                    AutoSelectorId = Guid.NewGuid(),
+                    AutoBidsForItemsId = productId.ToString(),
+                    UserId = userId,
+                    MaxAmount = maxAmount,
+                    BidListIds = ""
+                };
+
+                _context.AutoBidsForItems.Add(entry);
+            }
+
+            _context.SaveChanges();
+
+            TempData["Success"] = "Auto bid enabled.";
+            return RedirectToAction("Details", "Product", new { id = productId });
         }
     }
 }
