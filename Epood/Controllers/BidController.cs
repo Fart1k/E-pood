@@ -119,64 +119,84 @@ namespace Epood.Controllers
                 return;
             }
 
-            var highestBid = _context.Bids
-                .Where(x => x.ProductId == productId)
-                .OrderByDescending(x => x.Amount)
-                .FirstOrDefault();
-
-            if (highestBid == null)
-                return;
-
-            var autoUsers = _context.AutoBidsForItems
-                .Where(x => x.AutoBidsForItemsId == productId.ToString())
-                .Where(x => x.MaxAmount > highestBid.Amount)
-                .Where(x => !string.IsNullOrEmpty(x.UserId))
-                .OrderByDescending(x => x.MaxAmount)
-                .ToList();
-
-            var ordered = autoUsers
-                .OrderByDescending(x => x.MaxAmount)
-                .ToList();
-            if (highestBid == null)
+            while (true)
             {
-                return;
+
+                var highestBid = _context.Bids
+                    .Where(x => x.ProductId == productId)
+                    .OrderByDescending(x => x.Amount)
+                    .FirstOrDefault();
+
+                if (highestBid == null)
+                    {
+                        return;
+                    }
+
+                var autoUsers = _context.AutoBidsForItems
+                    .Where(x => x.AutoBidsForItemsId == productId.ToString())
+                    .Where(x => x.MaxAmount > highestBid.Amount)
+                    .Where(x => !string.IsNullOrEmpty(x.UserId))
+                    .OrderByDescending(x => x.MaxAmount)
+                    .ToList();
+
+
+                var ordered = autoUsers
+                    .OrderByDescending(x => x.MaxAmount)
+                    .ToList();
+
+                if (!ordered.Any())
+                {
+                    return;
+                }
+
+                bool bidPlaced = false;
+
+                foreach (var auto in ordered)
+                {
+                    if (auto.MaxAmount <= highestBid.Amount)
+                    {
+                        continue;
+                    }
+
+                    if (string.IsNullOrEmpty(auto.UserId))
+                    {
+                        continue;
+                    }
+
+                    if (auto.UserId == highestBid.UserId)
+                    {
+                        continue;
+                    }
+
+                    var newAmount = Math.Min(auto.MaxAmount, highestBid.Amount + 1);
+
+                    var autoBid = new Bid
+                    {
+                        ProductId = productId,
+                        UserId = auto.UserId,
+                        Amount = newAmount,
+                        IsAutomatic = true
+                    };
+
+                    _context.Bids.Add(autoBid);
+
+                    highestBid = autoBid;
+
+                    await _context.SaveChangesAsync();
+
+                    bidPlaced = true;
+
+                    Console.WriteLine($"Autobid triggered for user {auto.UserId}, max {auto.MaxAmount}");
+
+                    break;
+                }
+
+                if (!bidPlaced)
+                {
+                    return;
+                }
             }
 
-            foreach (var auto in ordered)
-            {
-                if (auto.MaxAmount <= highestBid.Amount)
-                {
-                    continue;
-                }
-
-                if (string.IsNullOrEmpty(auto.UserId))
-                {
-                    continue;
-                }
-
-                if (auto.UserId == highestBid.UserId)
-                {
-                    continue;
-                }
-
-                var newAmount = Math.Min(auto.MaxAmount, highestBid.Amount + 1);
-
-                var autoBid = new Bid
-                {
-                    ProductId = productId,
-                    UserId = auto.UserId,
-                    Amount = newAmount,
-                    IsAutomatic = true
-                };
-
-                _context.Bids.Add(autoBid);
-
-                highestBid = autoBid;
-
-                Console.WriteLine($"Autobid triggered for user {auto.UserId}, max {auto.MaxAmount}");
-            }
-
-            await _context.SaveChangesAsync();
         }
 
         [HttpPost]
