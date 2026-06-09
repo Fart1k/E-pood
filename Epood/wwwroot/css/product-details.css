@@ -82,6 +82,28 @@ button {
     color: black;
 }
 
+.bid-history-panel {
+    width: 100%;
+    min-height: 400px;
+    background-color: lightgray;
+    border-radius: 10px;
+
+    padding: 20px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.bid-row {
+    display: flex;
+    justify-content: space-between;
+
+    padding: 10px;
+    background-color: white;
+    border-radius: 6px;
+}
+
 .product-gallery {
     display: flex;
     flex-direction: column;
