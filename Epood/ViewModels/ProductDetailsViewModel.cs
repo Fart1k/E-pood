@@ -14,5 +14,10 @@
         public string SellerId { get; set; }
 
         public List<string> ImageUrls { get; set; } = new();
+
+        // For bids history on details page.
+        public List<BidHistoryViewModel> Bids { get; set; } = new();
+        public bool IsBidHistoryView {  get; set; }
+        public int BidCount { get; set; }
     }
 }

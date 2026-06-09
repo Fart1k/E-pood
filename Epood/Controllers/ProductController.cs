@@ -73,7 +73,7 @@ namespace Epood.Controllers
 
         // Details
         [HttpGet]
-        public IActionResult Details(int id)
+        public IActionResult Details(int id, string? view = null)
         {
             var product = _context.Products
                 .FirstOrDefault(x => x.Id == id);
@@ -82,6 +82,21 @@ namespace Epood.Controllers
             {
                 return NotFound();
             }
+
+            var bids = _context.Bids
+                .Include(x => x.User)
+                .Where(x => x.ProductId == id)
+                .OrderByDescending(x => x.CreatedAt)
+                .Select(x => new BidHistoryViewModel
+                {
+                    UserName = x.User.UserName,
+                    Amount = x.Amount,
+                    CreatedAt = x.CreatedAt,
+                })
+                .ToList();
+
+            var bidCount = _context.Bids
+                .Count(x => x.ProductId == id);
 
             var currentPrice = _context.Bids
                 .Where(x => x.ProductId == id)
@@ -94,17 +109,20 @@ namespace Epood.Controllers
                 Name = product.Name,
                 Description = product.Description,
                 ImageUrl = product.ImageUrl,
+                ImageUrls = string.IsNullOrEmpty(product.ImageUrl) ? new List<string>() : new List<string> { product.ImageUrl },
                 IsAuction = product.IsAuction,
                 Price = product.Price,
                 MinPrice = product.MinPrice,
                 AuctionEndTime = product.AuctionEndTime,
                 CurrentPrice = currentPrice,
                 SellerId = product.SellerId,
-                ImageUrls = new List<string> { product.ImageUrl}
+
+                IsBidHistoryView = view == "history",
+                Bids = bids,
+                BidCount = bidCount,
             };
 
             return View(vm);
         }
-
     }
 }

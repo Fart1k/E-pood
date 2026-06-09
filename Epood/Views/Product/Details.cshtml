@@ -15,10 +15,57 @@
         {
             <div class="alert alert-success">@TempData["Success"]</div>
         }
-
+        @{
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var isSeller = Model.SellerId == userId;
+        }
         <div class="product-content">
 
-            <div class="product-image-wrapper">
+            @if (!(isSeller && Model.IsBidHistoryView))
+            {
+                <div class="product-image-wrapper">
+                    @if (Model.ImageUrls != null && Model.ImageUrls.Any(x => !string.IsNullOrWhiteSpace(x)))
+                    {
+                        <div class="product-gallery">
+
+                            <div class="main-image">
+                                <img src="@Model.ImageUrls.First()" />
+                            </div>
+
+                            <div class="thumbnail-row">
+                                @foreach (var img in Model.ImageUrls)
+                                {
+                                    <div class="thumbnail-box">
+                                        <img src="@img" />
+                                    </div>
+                                }
+                            </div>
+
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="no-image">No image</div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="bid-history-panel">
+                    <h3>Bid History</h3>
+
+                    @foreach (var bid in Model.Bids)
+                    {
+                        <div class="bid-row">
+                            <div><strong>@bid.UserName</strong></div>
+                            <div>@bid.Amount €</div>
+                            <div>@bid.CreatedAt</div>
+                        </div>
+                    }
+                </div>
+            }
+
+            @* <div class="product-image-wrapper">
 
                 @if (Model.ImageUrls != null && Model.ImageUrls.Any(x => !string.IsNullOrWhiteSpace(x)))
                 {
@@ -44,7 +91,7 @@
                     <div class="no-image">No image</div>
                 }
 
-            </div>
+            </div> *@
 
             <div class="product-info">
 
@@ -64,11 +111,17 @@
 
                         @if (Model.SellerId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
                         {
-                            <a asp-controller="Bid"
-                               asp-action="BidHistory"
+                            <span class="bid-count">
+                                Bids on this item (@Model.BidCount)
+                            </span>
+
+                            <a asp-controller="Product"
+                               asp-action="Details"
+                               asp-route-id="@Model.Id"
+                               asp-route-view="@(Model.IsBidHistoryView ? null : "history")"
                                asp-route-productId="@Model.Id"
                                class="bid-history-btn">
-                                Bid History
+                                @(Model.IsBidHistoryView ? "Hide bid history" : "Show bid history")
                             </a>
                         }
                         else
