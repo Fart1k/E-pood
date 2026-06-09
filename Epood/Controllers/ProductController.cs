@@ -84,6 +84,7 @@ namespace Epood.Controllers
             }
 
             var bids = _context.Bids
+                .Include(x => x.User)
                 .Where(x => x.ProductId == id)
                 .OrderByDescending(x => x.CreatedAt)
                 .Select(x => new BidHistoryViewModel
@@ -113,11 +114,11 @@ namespace Epood.Controllers
                 CurrentPrice = currentPrice,
                 SellerId = product.SellerId,
 
-                IsBidHistoryView = view == "history"
+                IsBidHistoryView = view == "history",
+                Bids = bids
             };
 
             return View(vm);
         }
-
     }
 }
