@@ -111,6 +111,10 @@
 
                         @if (Model.SellerId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
                         {
+                            <span class="bid-count">
+                                Bids on this item (@Model.BidCount)
+                            </span>
+
                             <a asp-controller="Product"
                                asp-action="Details"
                                asp-route-id="@Model.Id"

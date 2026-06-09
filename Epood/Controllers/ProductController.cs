@@ -95,6 +95,9 @@ namespace Epood.Controllers
                 })
                 .ToList();
 
+            var bidCount = _context.Bids
+                .Count(x => x.ProductId == id);
+
             var currentPrice = _context.Bids
                 .Where(x => x.ProductId == id)
                 .Select(x => (decimal?)x.Amount)
@@ -115,7 +118,8 @@ namespace Epood.Controllers
                 SellerId = product.SellerId,
 
                 IsBidHistoryView = view == "history",
-                Bids = bids
+                Bids = bids,
+                BidCount = bidCount,
             };
 
             return View(vm);
