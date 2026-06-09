@@ -31,7 +31,8 @@
 
                             @if (item.Product.IsAuction)
                             {
-                                <p><strong>@item.CurrentPrice €</strong></p>
+                                <p><strong>Current price: @item.CurrentPrice €</strong></p>
+                                <p><strong>End Time: @item.Product.AuctionEndTime</strong></p>
                             }
                             else
                             {
