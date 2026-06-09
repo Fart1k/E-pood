@@ -1,94 +1,111 @@
 ﻿@model Epood.ViewModels.ProductDetailsViewModel
+<link rel="stylesheet" href="~/css/product-details.css"/>
+<div class="product-page">
 
-<h2>@Model.Name</h2>
+    <div class="product-card">
 
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-danger">
-        @TempData["Error"]
-    </div>
-}
+        <h1 class="product-title">@Model.Name</h1>
 
-@if (TempData["Success"] != null)
-{
-    <div class="alert alert-success">
-        @TempData["Success"]
-    </div>
-}
-
-<div class="row">
-    <div class="col-md-6">
-        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+        @if (TempData["Error"] != null)
         {
-            <img src="@Model.ImageUrl" style="width:100%; max-height:400px; object-fit: cover;"/>
-        }
-        else
-        {
-            <p>No image</p>
-        }
-    </div>
-
-    <div class="col-md-6">
-        <h4>Description</h4>
-        <p>@Model.Description</p>
-
-        @if (Model.IsAuction)
-        {
-            <h4>Auction</h4>
-
-            <p>
-                <strong>Starting price:</strong>
-                @Model.MinPrice €
-            </p>
-
-            <p>
-                <strong>Current highest bid:</strong>
-                @Model.CurrentPrice €
-            </p>
-
-            <p>
-                <strong>Auction End Time:</strong>
-                @Model.AuctionEndTime
-            </p>
-
-            <form asp-controller="Bid" asp-action="PlaceBid" method="post">
-                <input type="hidden" name="productId" value="@Model.Id"/>
-
-                <input type="number" name="amount" step="0.01" class="form-control" />
-
-                <button type="submit" class="btn btn-warning mt-2">Place Bid</button>
-            </form>
-            <br />
-
-            <form asp-controller="Bid" asp-action="EnableAutoBid" method="post">
-                <input type="hidden" name="productId" value="@Model.Id" />
-
-                <input type="number" name="maxAmount" placeholder="Max auto bid" />
-
-                <button class="btn btn-secondary">Enable auto bid</button>
-            </form>
-
-            @if (Model.SellerId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
-            {
-                <a class="btn btn-info" asp-controller="Bid" asp-action="BidHistory" asp-route-productId="@Model.Id">Bid History</a>
-            }
-        }
-        else
-        {
-            <p>
-                <strong>Price:</strong> 
-                @Model.Price €
-            </p>
-
-            <br />
-
-            <form asp-controller="Cart" asp-action="AddToCart" method="post">
-                <input type="hidden" name="productId" value="@Model.Id" />
-                <button type="submit" class="btn btn-success">Add to cart</button>
-            </form>
+            <div class="alert alert-danger">@TempData["Error"]</div>
         }
 
-        
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">@TempData["Success"]</div>
+        }
+
+        <div class="product-content">
+
+            <div class="product-image-wrapper">
+
+                @if (Model.ImageUrls != null && Model.ImageUrls.Any(x => !string.IsNullOrWhiteSpace(x)))
+                {
+                    <div class="product-gallery">
+
+                        <div class="main-image">
+                            <img src="@Model.ImageUrls.First()" />
+                        </div>
+
+                        <div class="thumbnail-row">
+                            @foreach (var img in Model.ImageUrls)
+                            {
+                                <div class="thumbnail-box">
+                                    <img src="@img" />
+                                </div>
+                            }
+                        </div>
+
+                    </div>
+                }
+                else
+                {
+                    <div class="no-image">No image</div>
+                }
+
+            </div>
+
+            <div class="product-info">
+
+                <p class="product-description">@Model.Description</p>
+
+                @if (Model.IsAuction)
+                {
+                    <div class="auction-info">
+
+                        <p style="font-size: 32px;"><strong>Auction info:</strong></p>
+
+                        <p>Starting price: <span style="float: right;">@Model.MinPrice €</span> </p>
+
+                        <p>Current price: <span style="float: right;">@Model.CurrentPrice €</span> </p>
+
+                        <p>Ends at: <span style="float: right;">@Model.AuctionEndTime</span> </p>
+
+                        @if (Model.SellerId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
+                        {
+                            <a asp-controller="Bid"
+                               asp-action="BidHistory"
+                               asp-route-productId="@Model.Id"
+                               class="bid-history-btn">
+                                Bid History
+                            </a>
+                        }
+                        else
+                        {
+                            <form asp-controller="Bid" asp-action="PlaceBid" method="post">
+                                <input type="hidden" name="productId" value="@Model.Id" />
+                                <input type="number" name="amount" step="0.01" placeholder="Your bid" />
+                                <button type="submit">Make Bid</button>
+                            </form>
+
+                            <form asp-controller="Bid" asp-action="EnableAutoBid" method="post">
+                                <input type="hidden" name="productId" value="@Model.Id" />
+                                <input type="number" name="maxAmount" placeholder="Max auto bid" />
+                                <button type="submit">Enable Auto Bid</button>
+                            </form>
+                        }
+
+                    </div>
+                }
+                else
+                {
+                    <div class="buy-info">
+
+                        <p><strong>Price:</strong> @Model.Price €</p>
+
+                        <form asp-controller="Cart" asp-action="AddToCart" method="post">
+                            <input type="hidden" name="productId" value="@Model.Id" />
+                            <button type="submit">Add to cart</button>
+                        </form>
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
 
     </div>
+
 </div>

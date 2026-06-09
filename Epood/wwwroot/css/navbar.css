@@ -1,0 +1,74 @@
+﻿.shared-layout-27 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    background-color: rgba(255, 245, 186, 1);
+    border-bottom: 1px solid #ddd;
+    font-family: 'Judson', serif;
+
+}
+
+.brand {
+    font-size: 32px;
+    text-decoration: none;
+    color: black;
+}
+
+.nav-center {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.nav-center a {
+    text-decoration: none;
+    color: black;
+    font-size: 18px;
+}
+
+.nav-right {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-toggle {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.dropdown-menu-custom {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: white;
+    border: 1px solid #ddd;
+    min-width: 160px;
+    flex-direction: column;
+    padding: 10px;
+    gap: 10px;
+    z-index: 2000 !important;
+}
+
+.dropdown:hover .dropdown-menu-custom {
+    display: flex;
+}
+
+.dropdown-menu-custom a,
+.dropdown-menu-custom button {
+    text-decoration: none;
+    color: black;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+}

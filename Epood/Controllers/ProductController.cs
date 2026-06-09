@@ -86,7 +86,7 @@ namespace Epood.Controllers
             var currentPrice = _context.Bids
                 .Where(x => x.ProductId == id)
                 .Select(x => (decimal?)x.Amount)
-                .Max() ?? product.MinPrice ?? product.Price;
+                .Max() ?? product.MinPrice ?? product.Price;    
 
             var vm = new ProductDetailsViewModel
             {
@@ -100,6 +100,7 @@ namespace Epood.Controllers
                 AuctionEndTime = product.AuctionEndTime,
                 CurrentPrice = currentPrice,
                 SellerId = product.SellerId,
+                ImageUrls = new List<string> { product.ImageUrl}
             };
 
             return View(vm);
