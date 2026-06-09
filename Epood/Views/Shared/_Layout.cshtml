@@ -27,7 +27,7 @@
 
         <div class="nav-center">
             <a asp-controller="Home" asp-action="Index">Home</a>
-
+            <a asp-controller="Home" asp-action="Auctions">Auctions</a>
             @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
             {
                 <a asp-controller="Admin" asp-action="PendingProducts">

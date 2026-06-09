@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="~/css/index.css" />
 <div class="home-wrapper">
     <div class="home-card">
-        <h1 class="page-title">Products</h1>
+        <h1 class="page-title">Auctions</h1>
 
         @if (Model == null || !Model.Any())
         {
@@ -31,7 +31,8 @@
 
                             @if (item.Product.IsAuction)
                             {
-                                <p><strong>@item.CurrentPrice €</strong></p>
+                                <p><strong>Current price: @item.CurrentPrice €</strong></p>
+                                <p><strong>End Time: @item.Product.AuctionEndTime</strong></p>
                             }
                             else
                             {
