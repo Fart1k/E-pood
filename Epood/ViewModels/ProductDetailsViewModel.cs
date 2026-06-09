@@ -12,5 +12,7 @@
         public DateTime? AuctionEndTime { get; set; }
         public decimal CurrentPrice { get; set; }
         public string SellerId { get; set; }
+
+        public List<string> ImageUrls { get; set; } = new();
     }
 }
