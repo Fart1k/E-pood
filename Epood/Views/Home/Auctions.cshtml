@@ -1,0 +1,105 @@
+﻿@model List<Epood.ViewModels.ProductListItemViewModel>
+<link rel="stylesheet" href="~/css/index.css" />
+<div class="home-wrapper">
+    <div class="home-card">
+        <h1 class="page-title">Auctions</h1>
+
+        @if (Model == null || !Model.Any())
+        {
+            <p>No products available</p>
+        }
+        else
+        {
+            <div class="product-grid">
+                @foreach (var item in Model)
+                {
+                    <div class="product-item-card">
+                        <div class="product-image-small">
+                            @if (!string.IsNullOrEmpty(item.Product.ImageUrl))
+                            {
+                                <img src="@item.Product.ImageUrl" />
+                            }
+                            else
+                            {
+                                <div class="no-image">No image</div>
+                            }
+                        </div>
+
+                        <div class="product-text">
+                            <h3>@item.Product.Name</h3>
+                            <p>@item.Product.Description</p>
+
+                            @if (item.Product.IsAuction)
+                            {
+                                <p><strong>@item.CurrentPrice €</strong></p>
+                            }
+                            else
+                            {
+                                <p><strong>@item.Product.Price €</strong></p>
+                            }
+
+                            <a class="btn btn-primary" asp-controller="Product" asp-action="Details" asp-route-id="@item.Product.Id">
+                                View
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@* @model List<Epood.ViewModels.ProductListItemViewModel>
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+<h1 class="mb-4">Products</h1>
+
+@if (Model == null || !Model.Any())
+{
+    <p>No products available.</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm">
+
+
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Product.Name</h5>
+                        <p class="card-text">
+                            @item.Product.Description
+                        </p>
+
+                        @if (item.Product.IsAuction)
+                        {
+                            <p>
+                                <strong>Starting Bid: </strong>
+                                @item.CurrentPrice €
+                            </p>
+                        }
+                        else
+                        {
+                            <p>
+                                <strong>Price: </strong>
+                                @item.Product.Price €
+                            </p>
+                        }
+
+                        <a class="btn btn-primary"
+                               asp-controller="Product"
+                               asp-action="Details"
+                               asp-route-id="@item.Product.Id">
+                            View
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+} *@

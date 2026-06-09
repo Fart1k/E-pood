@@ -1,4 +1,4 @@
-using Epood.Data;
+    using Epood.Data;
 using Epood.Models;
 using Epood.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -17,29 +17,48 @@ namespace Epood.Controllers
         public IActionResult Index()
         {
             var products = _context.Products
-                .Where(x => x.Status == ProductStatus.Approved)
-                .Select(p => new ProductListItemViewModel
-                {
-                    Product = p,
-                    CurrentPrice = _context.Bids
-                        .Where(b => b.ProductId == p.Id)
-                        .Select(b => (decimal?)b.Amount)
-                        .Max() ?? p.MinPrice
-                })
+                .Where(x => x.Status == ProductStatus.Approved && !x.IsAuction)
                 .ToList();
 
-            return View(products);
+            var model = products.Select(x => new ProductListItemViewModel
+            {
+                Product = x,
+                CurrentPrice = x.Price,
+            }).ToList();
+
+            return View(model);
+
+            //var products = _context.Products
+            //    .Where(x => x.Status == ProductStatus.Approved && !x.IsAuction)
+            //    .Select(p => new ProductListItemViewModel
+            //    {
+            //        Product = p,
+            //        CurrentPrice = _context.Bids
+            //            .Where(b => b.ProductId == p.Id)
+            //            .Select(b => (decimal?)b.Amount)
+            //            .Max() ?? p.MinPrice
+            //    })
+            //    .ToList();
+
+            //return View(products);
         }
 
-        public IActionResult Privacy()
+        public IActionResult Auctions()
         {
-            return View();
-        }
+            var products = _context.Products
+                .Where(x => x.Status == ProductStatus.Approved && x.IsAuction)
+                .ToList();
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var model = products.Select(p => new ProductListItemViewModel
+            {
+                Product = p,
+                CurrentPrice = _context.Bids
+                .Where(b => b.ProductId == p.Id)
+                .Select(b => (decimal?)b.Amount)
+                .Max() ?? p.MinPrice
+            }).ToList();
+
+            return View(model);
         }
     }
 }
